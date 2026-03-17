@@ -41,17 +41,15 @@ export class AudioSystem {
     if (this.villageInterval) window.clearInterval(this.villageInterval);
   }
 
-  playFootstep(): void {
-    this.playNoise(0.05, this.settings.sfxVolume * 0.2);
-  }
-
-  playUIClick(): void {
-    this.playTone(620, 0.05, 'square', 0.02, this.settings.sfxVolume * 0.7);
-  }
-
-  playDialogueAdvance(): void {
-    this.playTone(460, 0.07, 'triangle', 0.02, this.settings.sfxVolume * 0.5);
-  }
+  playFootstep(): void { this.playNoise(0.05, this.settings.sfxVolume * 0.2); }
+  playUIClick(): void { this.playTone(620, 0.05, 'square', 0.02, this.settings.sfxVolume * 0.7); }
+  playDialogueAdvance(): void { this.playTone(460, 0.07, 'triangle', 0.02, this.settings.sfxVolume * 0.5); }
+  playMenuOpen(): void { this.playTone(410, 0.08, 'triangle', 0.01, this.settings.sfxVolume * 0.5); }
+  playConfirm(): void { this.playTone(740, 0.1, 'square', 0.01, this.settings.sfxVolume * 0.6); }
+  playSuccessSting(): void { this.playTone(680, 0.12, 'triangle', 0.02, this.settings.sfxVolume * 0.6); this.playTone(920, 0.18, 'sine', 0.02, this.settings.sfxVolume * 0.5); }
+  playFailureSting(): void { this.playTone(210, 0.16, 'sawtooth', 0.01, this.settings.sfxVolume * 0.5); }
+  playRankUp(): void { this.playTone(520, 0.1, 'triangle', 0.02, this.settings.sfxVolume * 0.5); this.playTone(740, 0.16, 'triangle', 0.02, this.settings.sfxVolume * 0.55); }
+  playTrade(): void { this.playTone(560, 0.07, 'square', 0.01, this.settings.sfxVolume * 0.45); }
 
   private playTone(freq: number, duration: number, type: OscillatorType, attack: number, volume: number): void {
     if (this.settings.muted) return;

@@ -1,29 +1,51 @@
-# Omertà: Village Shadows (Phase 1)
+# Omertà: Village Shadows (Phase 2)
 
-A browser-based top-down pixel art mafia RPG prototype built with **Phaser + TypeScript**.
+Browser-based top-down pixel mafia RPG prototype built with **Phaser + TypeScript**.
 
-## Phase 1 scope
-This prototype focuses on a premium-feel foundation:
-- Smooth top-down movement (WASD + arrows) with normalized diagonals
-- Camera follow, deadzone, and map bounds
-- Handcrafted tile-based old Italian village map with districts and props
-- Collision with buildings/blocked spaces
-- 10 interactable NPCs with unique dialogue
-- Interactable points of interest (bar, church, garage, warehouse, docks, airport checkpoint)
-- Reusable interaction + dialogue systems
-- HUD foundation (money, XP, rank, location)
-- Pause/settings shell
-- Title screen with polished buttons and transitions
-- Audio foundation (music loop, footsteps, UI click, dialogue advance)
+## Phase 2 Added Gameplay Loop
+- Explore the old Italian village
+- Open heist boards at vehicle points
+- Run heists with success/failure outcomes
+- Earn/loss money and XP
+- Progress through 10 mafia ranks
+- Buy/sell drugs with stash capacity limits
+- Save progression locally and continue later
+
+## Implemented Systems
+- **Rank progression** with exact ladder:
+  1. Nobody
+  2. Street Rat
+  3. Runner
+  4. Earner
+  5. Crewman
+  6. Soldier
+  7. Capo
+  8. Underboss
+  9. Boss
+  10. Godfather
+- **Heist system**: selectable jobs, rank gates, configurable rewards/chances/penalties.
+- **Economy**: money earnings/spend/loss integrated with heists and drug trading.
+- **Drug market**: dealer interaction, buy/sell actions, inventory quantities.
+- **Inventory/stash**: used vs max capacity enforced.
+- **Save system**: auto-save on meaningful progression, title continue/reset options.
+- **UI expansion**: HUD money/rank/xp progress/location/stash, heist modal, result modal, drug market, rank-up toast.
+- **Audio expansion**: menu open, confirm, success/failure stings, rank-up, trade feedback.
+
+## Controls
+- Move: `WASD` or Arrow keys
+- Interact/advance: `E`
+- Heist menu: `↑/↓` + `Enter`, `Esc` close
+- Drug market: `↑/↓`, `B` buy, `S` sell, `Esc` close
+- Pause: `P` or `Esc`
+- Pause actions: `E` save, `Enter` reset save
 
 ## Tech
 - Phaser 3
 - TypeScript
 - Vite
-- No backend (local-only runtime)
+- No backend
 
 ## Project structure
-
 ```txt
 src/
   main.ts
@@ -48,34 +70,27 @@ public/
 ```
 
 ## Install
-
 ```bash
 npm install
 ```
 
 ## Run locally
-
 ```bash
 npm run dev
 ```
 
 ## Build
-
 ```bash
 npm run build
 ```
 
 ## Preview production build
-
 ```bash
 npm run preview
 ```
 
-## Deploy later to Vercel
-1. Push repo to GitHub.
-2. Import project in Vercel.
-3. Use default build command: `npm run build`.
-4. Use output directory: `dist`.
-5. Deploy.
-
-Vercel works out-of-the-box with this Vite setup.
+## Deploy to Vercel later
+1. Push to GitHub
+2. Import repo in Vercel
+3. Build command: `npm run build`
+4. Output dir: `dist`

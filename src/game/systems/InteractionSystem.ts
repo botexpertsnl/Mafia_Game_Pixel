@@ -6,7 +6,10 @@ import type { DialogueNode } from '../data/dialogues';
 
 export interface ActiveInteraction {
   prompt: string;
-  dialogue: DialogueNode;
+  type: 'npc' | 'zone';
+  action: string;
+  id: string;
+  dialogue?: DialogueNode;
 }
 
 export class InteractionSystem {
@@ -20,7 +23,7 @@ export class InteractionSystem {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, npc.x, npc.y);
       if (d < 24 && d < minDistance) {
         minDistance = d;
-        best = { prompt: `Press E to ${npc.promptText}`, dialogue: npc.dialogue };
+        best = { prompt: `Press E to ${npc.promptText}`, type: 'npc', action: npc.action, id: npc.dialogue.id, dialogue: npc.dialogue };
       }
     }
 
@@ -28,7 +31,7 @@ export class InteractionSystem {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, zone.x, zone.y);
       if (d < zone.radius && d < minDistance) {
         minDistance = d;
-        best = { prompt: `Press E to ${zone.prompt}`, dialogue: zone.dialogue };
+        best = { prompt: `Press E to ${zone.prompt}`, type: 'zone', action: zone.action, id: zone.id, dialogue: zone.dialogue };
       }
     }
 
