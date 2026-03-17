@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { DialogueNode } from '../data/dialogues';
 
-export type ZoneAction = 'dialogue' | 'heistBoard';
+export type ZoneAction = 'dialogue' | 'heistBoard' | 'travel' | 'warehouse';
 
 export class InteractableZone extends Phaser.GameObjects.Zone {
   public readonly id: string;
@@ -10,16 +10,7 @@ export class InteractableZone extends Phaser.GameObjects.Zone {
   public readonly radius: number;
   public readonly action: ZoneAction;
 
-  constructor(
-    scene: Phaser.Scene,
-    id: string,
-    x: number,
-    y: number,
-    radius: number,
-    prompt: string,
-    action: ZoneAction,
-    dialogue?: DialogueNode,
-  ) {
+  constructor(scene: Phaser.Scene, id: string, x: number, y: number, radius: number, prompt: string, action: ZoneAction, dialogue?: DialogueNode) {
     super(scene, x, y, radius * 2, radius * 2);
     this.id = id;
     this.prompt = prompt;

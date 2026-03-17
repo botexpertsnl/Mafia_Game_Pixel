@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { BootScene } from '../scenes/BootScene';
 import { TitleScene } from '../scenes/TitleScene';
 import { VillageScene } from '../scenes/VillageScene';
+import { PhiladelphiaScene } from '../scenes/PhiladelphiaScene';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -14,5 +15,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
   backgroundColor: '#100d0a',
-  scene: [BootScene, TitleScene, VillageScene],
+  scene: [BootScene, TitleScene, VillageScene, PhiladelphiaScene],
 };

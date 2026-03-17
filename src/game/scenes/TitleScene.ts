@@ -27,36 +27,31 @@ export class TitleScene extends Phaser.Scene {
       this.add.text(width / 2, y, label, { fontFamily: 'monospace', fontSize: '18px', color: '#f4e4c7' }).setOrigin(0.5);
       btn.on('pointerover', () => btn.setFillStyle(0x3a281a));
       btn.on('pointerout', () => btn.setFillStyle(0x2b1d14));
-      btn.on('pointerdown', () => {
-        this.audioSystem.resume();
-        this.audioSystem.playUIClick();
-        onClick?.();
-      });
+      btn.on('pointerdown', () => { this.audioSystem.resume(); this.audioSystem.playUIClick(); onClick?.(); });
     };
 
-    makeButton('New Game', 280, () => {
-      SaveSystem.reset();
-      this.startGame();
-    });
-    makeButton(hasSave ? 'Continue' : 'Continue (No Save)', 340, () => hasSave && this.startGame());
-    makeButton('Toggle Mute', 400, () => {
+    makeButton('New Game', 270, () => { SaveSystem.reset(); this.startFromSave(); });
+    makeButton(hasSave ? 'Continue' : 'Continue (No Save)', 330, () => hasSave && this.startFromSave());
+    makeButton('Toggle Mute', 390, () => {
       const settings = SettingsStore.load();
       settings.muted = !settings.muted;
       SettingsStore.save(settings);
       this.audioSystem.setSettings(settings);
     });
-    makeButton('Reset Save', 460, () => SaveSystem.reset());
+    makeButton('Reset Save', 450, () => SaveSystem.reset());
 
-    this.add.text(width / 2, height - 44, 'Phase 2: heists, rank progression, drug market, local saves', {
+    this.add.text(width / 2, height - 44, 'Phase 3: two cities, travel unlocks, warehouses, expanded empire systems', {
       fontFamily: 'monospace', fontSize: '12px', color: '#c1a884'
     }).setOrigin(0.5);
 
     this.audioSystem.resume();
-    this.audioSystem.startVillageLoop();
+    this.audioSystem.startCityLoop('village');
   }
 
-  private startGame(): void {
+  private startFromSave(): void {
+    const save = SaveSystem.load();
+    const target = save.currentCity === 'philadelphia' ? 'philadelphia' : 'village';
     this.cameras.main.fadeOut(350, 0, 0, 0);
-    this.time.delayedCall(360, () => this.scene.start('village'));
+    this.time.delayedCall(360, () => this.scene.start(target));
   }
 }

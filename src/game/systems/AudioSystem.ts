@@ -1,45 +1,27 @@
-export interface AudioSettings {
-  musicVolume: number;
-  sfxVolume: number;
-  muted: boolean;
-}
+export interface AudioSettings { musicVolume: number; sfxVolume: number; muted: boolean }
 
 export class AudioSystem {
   private ctx: AudioContext;
   private settings: AudioSettings = { musicVolume: 0.3, sfxVolume: 0.5, muted: false };
-  private villageInterval?: number;
+  private loopHandle?: number;
 
-  constructor() {
-    this.ctx = new AudioContext();
-  }
+  constructor() { this.ctx = new AudioContext(); }
+  resume(): void { if (this.ctx.state !== 'running') void this.ctx.resume(); }
+  setSettings(next: Partial<AudioSettings>): AudioSettings { this.settings = { ...this.settings, ...next }; return this.settings; }
+  getSettings(): AudioSettings { return this.settings; }
 
-  resume(): void {
-    if (this.ctx.state !== 'running') void this.ctx.resume();
-  }
-
-  setSettings(next: Partial<AudioSettings>): AudioSettings {
-    this.settings = { ...this.settings, ...next };
-    return this.settings;
-  }
-
-  getSettings(): AudioSettings {
-    return this.settings;
-  }
-
-  startVillageLoop(): void {
-    this.stopVillageLoop();
-    const progression = [196, 220, 174, 164, 146, 164, 196, 130.8];
+  startCityLoop(city: 'village' | 'philadelphia'): void {
+    this.stopLoop();
+    const prog = city === 'village' ? [196, 220, 174, 164, 146, 164, 196, 130.8] : [164, 130.8, 146, 155, 174, 138.5, 164, 123.5];
     let beat = 0;
-    this.villageInterval = window.setInterval(() => {
-      this.playTone(progression[beat % progression.length], 0.9, 'triangle', 0.08, this.settings.musicVolume);
-      this.playTone(progression[(beat + 2) % progression.length] / 2, 1.1, 'sine', 0.08, this.settings.musicVolume * 0.7);
+    this.loopHandle = window.setInterval(() => {
+      this.playTone(prog[beat % prog.length], 0.82, city === 'village' ? 'triangle' : 'sawtooth', 0.05, this.settings.musicVolume);
+      this.playTone(prog[(beat + 2) % prog.length] / 2, 1.0, 'sine', 0.05, this.settings.musicVolume * (city === 'village' ? 0.65 : 0.5));
       beat++;
-    }, 740);
+    }, city === 'village' ? 740 : 620);
   }
 
-  stopVillageLoop(): void {
-    if (this.villageInterval) window.clearInterval(this.villageInterval);
-  }
+  stopLoop(): void { if (this.loopHandle) window.clearInterval(this.loopHandle); }
 
   playFootstep(): void { this.playNoise(0.05, this.settings.sfxVolume * 0.2); }
   playUIClick(): void { this.playTone(620, 0.05, 'square', 0.02, this.settings.sfxVolume * 0.7); }
@@ -50,6 +32,9 @@ export class AudioSystem {
   playFailureSting(): void { this.playTone(210, 0.16, 'sawtooth', 0.01, this.settings.sfxVolume * 0.5); }
   playRankUp(): void { this.playTone(520, 0.1, 'triangle', 0.02, this.settings.sfxVolume * 0.5); this.playTone(740, 0.16, 'triangle', 0.02, this.settings.sfxVolume * 0.55); }
   playTrade(): void { this.playTone(560, 0.07, 'square', 0.01, this.settings.sfxVolume * 0.45); }
+  playTravel(): void { this.playTone(320, 0.2, 'sine', 0.03, this.settings.sfxVolume * 0.5); this.playTone(540, 0.24, 'triangle', 0.04, this.settings.sfxVolume * 0.45); }
+  playWarehouse(): void { this.playTone(280, 0.08, 'square', 0.01, this.settings.sfxVolume * 0.45); }
+  playIndustrialAmbient(pan = 0): void { this.playNoise(0.08, this.settings.sfxVolume * (0.08 + Math.abs(pan) * 0.04), pan); }
 
   private playTone(freq: number, duration: number, type: OscillatorType, attack: number, volume: number): void {
     if (this.settings.muted) return;
@@ -66,7 +51,7 @@ export class AudioSystem {
     osc.stop(now + duration + 0.05);
   }
 
-  private playNoise(duration: number, volume: number): void {
+  private playNoise(duration: number, volume: number, pan = 0): void {
     if (this.settings.muted) return;
     const buffer = this.ctx.createBuffer(1, this.ctx.sampleRate * duration, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -78,7 +63,9 @@ export class AudioSystem {
     filter.frequency.value = 800;
     const gain = this.ctx.createGain();
     gain.gain.value = volume;
-    src.connect(filter).connect(gain).connect(this.ctx.destination);
+    const panner = this.ctx.createStereoPanner();
+    panner.pan.value = Math.max(-1, Math.min(1, pan));
+    src.connect(filter).connect(gain).connect(panner).connect(this.ctx.destination);
     src.start();
   }
 }

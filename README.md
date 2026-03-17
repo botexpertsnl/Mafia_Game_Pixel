@@ -1,73 +1,57 @@
-# Omertà: Village Shadows (Phase 2)
+# Omertà: Village Shadows (Phase 3 MVP)
 
-Browser-based top-down pixel mafia RPG prototype built with **Phaser + TypeScript**.
+A browser-based top-down pixel mafia RPG built with **Phaser + TypeScript**.
 
-## Phase 2 Added Gameplay Loop
-- Explore the old Italian village
-- Open heist boards at vehicle points
-- Run heists with success/failure outcomes
-- Earn/loss money and XP
-- Progress through 10 mafia ranks
-- Buy/sell drugs with stash capacity limits
-- Save progression locally and continue later
+## Phase 3 Highlights
+- Two distinct playable cities:
+  - **Old Italian Village** (warm, intimate, early progression)
+  - **Philadelphia** (industrial, dense, higher-risk opportunities)
+- Airport **travel unlock at Rank 6 (Soldier)** with transition flow.
+- Expanded heists with city-specific ladders and scaling risk/reward.
+- Expanded drug empire loop with full ladder:
+  - weed, hash, pills, amphetamines, heroin, crack, cocaine
+- Deal attempt system (probabilistic outcomes, confiscation/fines on failure).
+- Warehouse progression across both cities with purchasable storage tiers.
+- Save system expanded to include city, warehouses, storage, and progression stats.
+- Enhanced audio layering with city-specific music loops and extra gameplay SFX.
 
-## Implemented Systems
-- **Rank progression** with exact ladder:
-  1. Nobody
-  2. Street Rat
-  3. Runner
-  4. Earner
-  5. Crewman
-  6. Soldier
-  7. Capo
-  8. Underboss
-  9. Boss
-  10. Godfather
-- **Heist system**: selectable jobs, rank gates, configurable rewards/chances/penalties.
-- **Economy**: money earnings/spend/loss integrated with heists and drug trading.
-- **Drug market**: dealer interaction, buy/sell actions, inventory quantities.
-- **Inventory/stash**: used vs max capacity enforced.
-- **Save system**: auto-save on meaningful progression, title continue/reset options.
-- **UI expansion**: HUD money/rank/xp progress/location/stash, heist modal, result modal, drug market, rank-up toast.
-- **Audio expansion**: menu open, confirm, success/failure stings, rank-up, trade feedback.
+## Core Loop
+1. Explore city districts and interact with NPCs/boards
+2. Run heists for cash + XP
+3. Buy product, run deals, manage risk
+4. Acquire warehouses to expand total storage
+5. Unlock travel, move into Philadelphia for bigger opportunities
+6. Climb from **Nobody** to **Godfather**
+
+## Rank Ladder
+1. Nobody
+2. Street Rat
+3. Runner
+4. Earner
+5. Crewman
+6. Soldier
+7. Capo
+8. Underboss
+9. Boss
+10. Godfather
 
 ## Controls
-- Move: `WASD` or Arrow keys
-- Interact/advance: `E`
-- Heist menu: `↑/↓` + `Enter`, `Esc` close
-- Drug market: `↑/↓`, `B` buy, `S` sell, `Esc` close
-- Pause: `P` or `Esc`
-- Pause actions: `E` save, `Enter` reset save
+- Move: `WASD` / Arrow keys
+- Interact / advance dialogue: `E`
+- Pause/settings shell: `P` or `Esc`
+- Heist menu: `↑/↓`, `Enter`, `Esc`
+- Drug market: `↑/↓`, `B` buy, `S` sell, `D` deal, `Esc`
+- Warehouse menu: `↑/↓` warehouse, `←/→` drug, `B` buy warehouse, `T` store, `R` retrieve
+- Pause quick settings: `M/N` music -/+, `B/S` sfx -/+, `E` save, `Enter` reset
 
-## Tech
-- Phaser 3
-- TypeScript
-- Vite
-- No backend
-
-## Project structure
-```txt
-src/
-  main.ts
-  game/
-    config/
-    scenes/
-    entities/
-    systems/
-    ui/
-    data/
-    audio/
-    utils/
-public/
-  assets/
-    sprites/
-    tilesets/
-    maps/
-    ui/
-    audio/
-      music/
-      sfx/
-```
+## Balance/Data Location
+Key balancing and progression data are centralized in:
+- `src/game/data/ranks.ts`
+- `src/game/data/heists.ts`
+- `src/game/data/drugs.ts`
+- `src/game/data/warehouses.ts`
+- `src/game/data/cityContent.ts`
+- `src/game/data/gameState.ts`
 
 ## Install
 ```bash
@@ -84,13 +68,16 @@ npm run dev
 npm run build
 ```
 
-## Preview production build
+## Preview build
 ```bash
 npm run preview
 ```
 
-## Deploy to Vercel later
-1. Push to GitHub
-2. Import repo in Vercel
+## Deploy to Vercel
+1. Push repository to GitHub
+2. Import project in Vercel
 3. Build command: `npm run build`
-4. Output dir: `dist`
+4. Output directory: `dist`
+5. Deploy
+
+Vercel works directly with this Vite setup.
