@@ -50,53 +50,70 @@ export abstract class CitySceneBase extends Phaser.Scene {
   private footstepCooldown = 0;
 
   create(): void {
-    this.audioSystem = this.registry.get('audioSystem');
-    this.audioSystem.resume();
-    this.progression.hydrate(SaveSystem.load());
-    this.progression.setCity(this.cityId, CITY_CONTENT[this.cityId].location);
+    try {
+      console.log(`[${this.scene.key}] Gameplay create started`);
+      this.audioSystem = this.registry.get('audioSystem');
+      this.audioSystem.resume();
+      this.progression.hydrate(SaveSystem.load());
+      this.progression.setCity(this.cityId, CITY_CONTENT[this.cityId].location);
 
-    const map = this.make.tilemap({ tileWidth: TILE_SIZE, tileHeight: TILE_SIZE, width: this.mapSize.width, height: this.mapSize.height });
-    const tiles = map.addTilesetImage('tiles', 'tiles', TILE_SIZE, TILE_SIZE, 0, 0)!;
-    const { collision, lights } = this.createLayers(map, tiles);
-    collision.setVisible(false).setCollision(1);
+      const map = this.make.tilemap({ tileWidth: TILE_SIZE, tileHeight: TILE_SIZE, width: this.mapSize.width, height: this.mapSize.height });
+      const tiles = map.addTilesetImage('tiles', 'tiles', TILE_SIZE, TILE_SIZE, 0, 0)!;
+      const { collision, lights } = this.createLayers(map, tiles);
+      collision.setVisible(false).setCollision(1);
 
-    this.player = new Player(this, this.spawn.x, this.spawn.y);
-    this.createAnimations();
-    this.physics.add.collider(this.player, collision);
+      this.player = new Player(this, this.spawn.x, this.spawn.y);
+      console.log(`[${this.scene.key}] Player spawn`, this.player.x, this.player.y);
+      this.createAnimations();
+      this.physics.add.collider(this.player, collision);
 
-    this.spawnNpcs();
-    this.spawnZones();
-    this.interactionSystem = new InteractionSystem(this.player, this.npcs, this.zones);
+      this.spawnNpcs();
+      this.spawnZones();
+      this.interactionSystem = new InteractionSystem(this.player, this.npcs, this.zones);
 
-    this.hud = new Hud(this);
-    this.dialogueBox = new DialogueBox(this);
-    this.pauseMenu = new PauseMenu(this);
-    this.heistMenu = new HeistMenu(this);
-    this.resultModal = new ResultModal(this);
-    this.drugMenu = new DrugMarketMenu(this);
-    this.rankToast = new RankUpToast(this);
-    this.travelMenu = new TravelMenu(this);
-    this.warehouseMenu = new WarehouseMenu(this);
+      this.hud = new Hud(this);
+      this.dialogueBox = new DialogueBox(this);
+      this.pauseMenu = new PauseMenu(this);
+      this.heistMenu = new HeistMenu(this);
+      this.resultModal = new ResultModal(this);
+      this.drugMenu = new DrugMarketMenu(this);
+      this.rankToast = new RankUpToast(this);
+      this.travelMenu = new TravelMenu(this);
+      this.warehouseMenu = new WarehouseMenu(this);
 
-    this.keys = {
-      E: this.input.keyboard!.addKey('E'), P: this.input.keyboard!.addKey('P'), UP: this.input.keyboard!.addKey('UP'), DOWN: this.input.keyboard!.addKey('DOWN'),
-      LEFT: this.input.keyboard!.addKey('LEFT'), RIGHT: this.input.keyboard!.addKey('RIGHT'), ENTER: this.input.keyboard!.addKey('ENTER'), B: this.input.keyboard!.addKey('B'),
-      S: this.input.keyboard!.addKey('S'), D: this.input.keyboard!.addKey('D'), T: this.input.keyboard!.addKey('T'), R: this.input.keyboard!.addKey('R'), ESC: this.input.keyboard!.addKey('ESC'), M: this.input.keyboard!.addKey('M'), N: this.input.keyboard!.addKey('N')
-    };
+      this.keys = {
+        E: this.input.keyboard!.addKey('E'), P: this.input.keyboard!.addKey('P'), UP: this.input.keyboard!.addKey('UP'), DOWN: this.input.keyboard!.addKey('DOWN'),
+        LEFT: this.input.keyboard!.addKey('LEFT'), RIGHT: this.input.keyboard!.addKey('RIGHT'), ENTER: this.input.keyboard!.addKey('ENTER'), B: this.input.keyboard!.addKey('B'),
+        S: this.input.keyboard!.addKey('S'), D: this.input.keyboard!.addKey('D'), T: this.input.keyboard!.addKey('T'), R: this.input.keyboard!.addKey('R'), ESC: this.input.keyboard!.addKey('ESC'), M: this.input.keyboard!.addKey('M'), N: this.input.keyboard!.addKey('N')
+      };
 
-    this.input.on('pointerdown', () => { if (this.resultModal.isOpen()) this.closeResult(); else if (this.dialogueSystem.isActive()) this.advanceDialogue(); });
+      this.input.on('pointerdown', () => { if (this.resultModal.isOpen()) this.closeResult(); else if (this.dialogueSystem.isActive()) this.advanceDialogue(); });
 
-    this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
-    this.cameras.main.setDeadzone(40, 24);
-    this.cameras.main.setBounds(0, 0, this.mapSize.width * TILE_SIZE, this.mapSize.height * TILE_SIZE);
-    this.physics.world.setBounds(0, 0, this.mapSize.width * TILE_SIZE, this.mapSize.height * TILE_SIZE);
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+      this.cameras.main.setDeadzone(40, 24);
+      this.cameras.main.setBounds(0, 0, this.mapSize.width * TILE_SIZE, this.mapSize.height * TILE_SIZE);
+      this.physics.world.setBounds(0, 0, this.mapSize.width * TILE_SIZE, this.mapSize.height * TILE_SIZE);
+      console.log(`[${this.scene.key}] Camera bounds`, this.mapSize.width * TILE_SIZE, this.mapSize.height * TILE_SIZE);
 
-    this.lights.enable().setAmbientColor(this.cityId === 'village' ? 0x8f775d : 0x6d7485);
-    lights.forEach((l) => this.lights.addLight(l.x, l.y, l.r, l.c, l.i));
+      this.lights.enable().setAmbientColor(this.cityId === 'village' ? 0x8f775d : 0x6d7485);
+      lights.forEach((l) => this.lights.addLight(l.x, l.y, l.r, l.c, l.i));
 
-    this.refreshHud();
-    this.audioSystem.startCityLoop(this.cityId);
-    this.cameras.main.fadeIn(600, 0, 0, 0);
+      this.refreshHud();
+      this.audioSystem.startCityLoop(this.cityId);
+      this.cameras.main.fadeIn(600, 0, 0, 0);
+      console.log(`[${this.scene.key}] Gameplay create complete`);
+    } catch (error) {
+      console.error(`[${this.scene.key}] Game failed to start`, error);
+      const msg = error instanceof Error ? error.message : String(error);
+      this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, 0x000000, 0.95).setScrollFactor(0);
+      this.add.text(this.scale.width / 2, this.scale.height / 2, `Game failed to start\n${msg}`, {
+        color: '#ffcccc',
+        fontFamily: 'monospace',
+        fontSize: '16px',
+        align: 'center',
+        wordWrap: { width: this.scale.width - 60 },
+      }).setOrigin(0.5).setScrollFactor(0);
+    }
   }
 
   update(_t: number, delta: number): void {

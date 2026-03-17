@@ -30,7 +30,11 @@ export class TitleScene extends Phaser.Scene {
       btn.on('pointerdown', () => { this.audioSystem.resume(); this.audioSystem.playUIClick(); onClick?.(); });
     };
 
-    makeButton('New Game', 270, () => { SaveSystem.reset(); this.startFromSave(); });
+    makeButton('New Game', 270, () => {
+      console.log('[TitleScene] New Game clicked');
+      SaveSystem.reset();
+      this.startFromSave();
+    });
     makeButton(hasSave ? 'Continue' : 'Continue (No Save)', 330, () => hasSave && this.startFromSave());
     makeButton('Toggle Mute', 390, () => {
       const settings = SettingsStore.load();
@@ -52,6 +56,9 @@ export class TitleScene extends Phaser.Scene {
     const save = SaveSystem.load();
     const target = save.currentCity === 'philadelphia' ? 'philadelphia' : 'village';
     this.cameras.main.fadeOut(350, 0, 0, 0);
-    this.time.delayedCall(360, () => this.scene.start(target));
+    this.time.delayedCall(360, () => {
+      console.log('[TitleScene] Starting gameplay scene:', target);
+      this.scene.start(target);
+    });
   }
 }
