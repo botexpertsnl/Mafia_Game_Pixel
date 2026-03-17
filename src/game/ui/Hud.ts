@@ -49,7 +49,10 @@ export class Hud {
   }
 
   setInteraction(prompt?: string): void {
-    if (!prompt) return this.interactionText.setVisible(false);
+    if (!prompt) {
+      this.interactionText.setVisible(false);
+      return;
+    }
     this.interactionText.setText(prompt).setVisible(true);
   }
 }

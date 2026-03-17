@@ -11,11 +11,11 @@ export class VillageScene extends CitySceneBase {
   constructor() { super('village'); }
 
   protected createLayers(map: Phaser.Tilemaps.Tilemap, tiles: Phaser.Tilemaps.Tileset) {
-    const ground = map.createLayer('ground', tiles, createGroundLayer(), 0, 0)!;
-    const roads = map.createLayer('roads', tiles, createRoadLayer(), 0, 0)!;
-    const buildings = map.createLayer('buildings', tiles, createBuildingLayer(), 0, 0)!;
-    const deco = map.createLayer('deco', tiles, createDecorationLayer(), 0, 0)!;
-    const collision = map.createLayer('collision', tiles, createCollisionLayer(), 0, 0)!;
+    const ground = (map as any).createLayer('ground', tiles, createGroundLayer(), 0, 0)!;
+    const roads = (map as any).createLayer('roads', tiles, createRoadLayer(), 0, 0)!;
+    const buildings = (map as any).createLayer('buildings', tiles, createBuildingLayer(), 0, 0)!;
+    const deco = (map as any).createLayer('deco', tiles, createDecorationLayer(), 0, 0)!;
+    const collision = (map as any).createLayer('collision', tiles, createCollisionLayer(), 0, 0)!;
     [ground, roads, buildings, deco].forEach((l) => l.setPipeline('Light2D'));
     return {
       collision,

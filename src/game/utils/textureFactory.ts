@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 export const createTextures = (scene: Phaser.Scene): void => {
-  const g = scene.make.graphics({ x: 0, y: 0, add: false });
+  const g = scene.make.graphics({ x: 0, y: 0 });
 
   // tileset atlas 20 tiles
   g.fillStyle(0xb79b76).fillRect(0, 0, 16, 16); // dirt

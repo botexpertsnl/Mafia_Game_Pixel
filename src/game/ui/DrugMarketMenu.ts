@@ -24,7 +24,10 @@ export class DrugMarketMenu {
   getSelectedDrugId(): string | undefined { return this.drugs[this.selected]?.id; }
 
   render(state: SaveState): void {
-    if (!this.drugs.length) return this.text.setText('No products unlocked yet. Increase rank.');
+    if (!this.drugs.length) {
+      this.text.setText('No products unlocked yet. Increase rank.');
+      return;
+    }
     const lines = this.drugs.map((d, i) => {
       const p = i === this.selected ? '▶' : ' ';
       return `${p} ${d.name.padEnd(12, ' ')} Buy ₤${d.baseBuyPrice.toString().padEnd(4, ' ')} Sell ₤${d.baseSellPrice.toString().padEnd(4, ' ')} Hand ${(state.inventory[d.id] || 0)} | Storage ${(state.warehouseStorage[d.id] || 0)}`;
